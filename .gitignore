@@ -1,0 +1,17 @@
+# Local secrets (copy from email_config.example.php)
+email_config.php
+
+# User uploads (payment proofs, QR codes generated at runtime)
+uploads/
+
+# Debug / local test artifacts
+debug-*.log
+*.log
+
+# Large media — keep locally; GitHub rejects files over 100MB
+Picture/BACKGROUND/*.zip
+Picture/Video/**/*.MP4
+Picture/Video/**/*.mp4
+
+# Google Calendar credentials (use .example.json as template)
+credentials/google-calendar-credentials.json
