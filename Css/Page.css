@@ -3170,6 +3170,447 @@
       .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
     }
 
+    /* ----- iPhone SE Specific (375x667px) ----- */
+    @media (max-width: 375px) {
+      /* Navigation */
+      .navbar {
+        padding: 10px 12px;
+      }
+      .navbar.scrolled {
+        padding: 8px 12px;
+      }
+      .logo {
+        font-size: 1.1rem;
+      }
+      .logo-img {
+        height: 24px;
+      }
+      .menu-toggle {
+        font-size: 1.2rem;
+      }
+      .nav-links {
+        padding: 20px 16px;
+        right: 12px;
+        width: 200px;
+      }
+      .nav-links a {
+        font-size: 0.85rem;
+        padding: 6px 0;
+      }
+
+      /* Hero Section */
+      .hero {
+        padding: 0 16px;
+      }
+      .hero-content {
+        padding: 30px 16px;
+      }
+      .hero-title-main {
+        font-size: 2rem;
+        line-height: 1.1;
+      }
+      .hero-title-sub {
+        font-size: 1.2rem;
+      }
+      .hero-subtitle {
+        font-size: 0.95rem;
+        margin: 0 auto 30px;
+      }
+      .award-badge {
+        padding: 6px 14px;
+        font-size: 0.65rem;
+        margin-bottom: 20px;
+      }
+      .hero-buttons {
+        gap: 12px;
+      }
+      .btn-primary, .btn-secondary {
+        padding: 12px 24px;
+        font-size: 0.8rem;
+      }
+
+      /* Section Titles */
+      .section-title {
+        font-size: 2rem;
+      }
+      .section-sub {
+        font-size: 0.95rem;
+      }
+
+      /* Stats Grid */
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .stat-card {
+        padding: 14px 4px;
+        border-radius: 20px;
+      }
+      .stat-card i {
+        font-size: 1.4rem;
+      }
+      .stat-card strong {
+        font-size: 1.3rem;
+      }
+      .stat-card span {
+        font-size: 0.75rem;
+      }
+
+      /* Gallery */
+      .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 0 16px;
+      }
+      .gallery-item {
+        border-radius: 16px;
+      }
+
+      /* Booking Form */
+      .booking-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 0 16px;
+      }
+      .section-card {
+        padding: 20px 16px;
+        border-radius: 16px;
+      }
+      .booking-wrap {
+        padding: 20px 16px;
+        border-radius: 24px;
+      }
+      .landing-calendar-container {
+        padding: 12px;
+        border-radius: 12px;
+      }
+      .calendar-day {
+        font-size: 10px;
+        padding: 2px;
+      }
+      .day-number {
+        font-size: 10px;
+      }
+      .day-indicator {
+        font-size: 6px;
+      }
+      .calendar-weekdays span {
+        font-size: 8px;
+      }
+      .calendar-legend {
+        gap: 8px;
+        font-size: 9px;
+      }
+      .legend-item {
+        gap: 4px;
+      }
+      .calendar-notice {
+        font-size: 10px;
+        padding: 8px 10px;
+      }
+
+      /* Form Elements */
+      .date-input-group input,
+      .date-input-group select {
+        padding: 12px 14px;
+        font-size: 14px;
+      }
+      .date-input-group label {
+        font-size: 10px;
+      }
+      .detail-value {
+        font-size: 14px;
+        padding: 10px 14px;
+      }
+      .btn-book {
+        padding: 14px 24px;
+        font-size: 14px;
+      }
+
+      /* Reviews */
+      .rating-summary {
+        padding: 20px 16px;
+        border-radius: 16px;
+      }
+      .rating-overview {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .average-score {
+        font-size: 2.2rem;
+      }
+      .stars-display {
+        font-size: 1.3rem;
+      }
+      .reviews-list {
+        grid-template-columns: 1fr;
+      }
+      .review-card {
+        padding: 16px;
+        border-radius: 12px;
+      }
+      .review-nav-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+      }
+
+      /* FAQ Section */
+      .faq-section {
+        padding: 60px 16px;
+        border-radius: 20px;
+      }
+      .faq-container {
+        padding: 20px 16px;
+        border-radius: 20px;
+      }
+      .faq-question {
+        padding: 16px 20px;
+      }
+      .faq-question-text {
+        font-size: 14px;
+      }
+      .faq-answer p {
+        padding: 0 20px 20px;
+        font-size: 13px;
+      }
+
+      /* Contact */
+      .contact-item {
+        padding: 12px 20px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+      }
+      .contact-item i {
+        font-size: 1.2rem;
+        width: 24px;
+      }
+
+      /* Footer */
+      .footer {
+        padding: 40px 20px 20px;
+      }
+      .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      /* Multi-step Form */
+      .booking-form-container {
+        padding: 20px 16px;
+        border-radius: 16px;
+      }
+      .progress-steps {
+        margin: 12px 4px;
+      }
+      .step-number {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
+      }
+      .step-label {
+        font-size: 9px;
+      }
+      .booking-form-content {
+        padding: 0 16px 16px;
+      }
+      .guest-details-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .booking-input-small {
+        padding: 10px 12px;
+        font-size: 14px;
+      }
+      .booking-select {
+        padding: 10px 12px;
+        font-size: 14px;
+      }
+
+      /* FAQ Floating Widget */
+      .faq-floating {
+        bottom: 1rem;
+        right: 1rem;
+        left: 1rem;
+        max-width: none;
+        width: auto;
+      }
+      .faq-panel {
+        max-height: 500px;
+      }
+      .faq-floating.open .faq-panel {
+        max-height: 60vh;
+      }
+      .faq-trigger {
+        width: 100%;
+        padding: 0.8rem 1.4rem;
+        font-size: 0.9rem;
+      }
+      .faq-chat {
+        max-height: 280px;
+      }
+      .faq-bubble {
+        max-width: 90%;
+        font-size: 0.85rem;
+      }
+
+      /* Modal */
+      .modal-content {
+        max-width: 100%;
+        border-radius: 20px;
+        margin: 20px 10px;
+      }
+      .modal-header {
+        padding: 20px 24px;
+      }
+      .modal-header h3 {
+        font-size: 1.3rem;
+      }
+      .modal-body {
+        padding: 24px;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        padding: 14px 18px;
+        font-size: 0.9rem;
+      }
+      .star-rating .star {
+        font-size: 1.8rem;
+      }
+
+      /* Section Padding */
+      section {
+        padding: 60px 16px;
+      }
+
+      /* Villa Panorama */
+      .villa-panorama-container {
+        height: 280px;
+        border-radius: 24px;
+      }
+      .video-overlay {
+        padding: 16px;
+      }
+      .video-overlay h3 {
+        font-size: 1.1rem;
+      }
+      .video-overlay p {
+        font-size: 0.75rem;
+      }
+      .video-nav-left,
+      .video-nav-right {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+      }
+
+      /* Amenities */
+      .amenities-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 12px;
+        padding: 16px;
+      }
+      .amenity-icon {
+        font-size: 1rem;
+        min-width: 20px;
+      }
+      .amenity-item span:last-child {
+        font-size: 0.75rem;
+      }
+
+      /* Location */
+      .location-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+      .map-container {
+        border-radius: 24px;
+        height: 250px;
+      }
+      .map-link-btn {
+        padding: 10px 18px;
+        font-size: 0.8rem;
+        bottom: 16px;
+        left: 16px;
+      }
+      .dist-item {
+        padding: 12px 18px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+      }
+
+      /* Summary Cards */
+      .rates-container,
+      .summary-container {
+        padding: 14px;
+        border-radius: 12px;
+      }
+      .rate-item,
+      .summary-row {
+        font-size: 0.75rem;
+      }
+      .summary-row.total {
+        font-size: 0.85rem;
+      }
+
+      /* Payment Options */
+      .payment-method-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .payment-option {
+        padding: 14px 16px;
+      }
+      .payment-option-text,
+      .payment-option-text-large {
+        font-size: 13px;
+      }
+
+      /* Info Box */
+      .info-box {
+        padding: 12px;
+        border-radius: 10px;
+      }
+      .info-text {
+        font-size: 0.7rem;
+      }
+
+      /* Terms Content */
+      .terms-content {
+        padding: 12px;
+        border-radius: 10px;
+        max-height: 300px;
+      }
+      .terms-text {
+        font-size: 10px;
+      }
+      .policy-text {
+        font-size: 10px;
+      }
+
+      /* Success Message */
+      .success-message {
+        padding: 24px 16px;
+      }
+      .success-icon {
+        width: 56px;
+        height: 56px;
+      }
+      .success-icon span {
+        font-size: 28px;
+      }
+      .success-title {
+        font-size: 18px;
+      }
+      .success-booking-id {
+        font-size: 16px;
+      }
+      .success-message-text {
+        font-size: 12px;
+      }
+    }
+
     /* utility */
     .text-center { text-align: center; }
     .mt-16 { margin-top: 16px; }
@@ -4749,5 +5190,623 @@
 
       .faq-answer p {
         font-size: 13px;
+      }
+    }
+
+    html { overflow-x: hidden; }
+    body { min-width: 0; overflow-x: hidden; }
+    img, video, iframe { max-width: 100%; }
+    input, select, textarea, button { max-width: 100%; }
+
+    @media (max-width: 768px) {
+      section { width: 100%; min-width: 0; }
+      .section-title,
+      .section-header .section-title {
+        font-size: clamp(1.8rem, 7vw, 2.35rem);
+        line-height: 1.15;
+      }
+      .hero-content,
+      .booking-wrap,
+      .section-card,
+      .booking-form-container { width: 100%; min-width: 0; }
+      .booking-wrap,
+      .section-card,
+      .booking-form-container { padding: 20px; }
+      .booking-grid,
+      .guest-details-grid,
+      .guest-info-grid,
+      .about-grid,
+      .location-grid,
+      .contact-grid,
+      .footer-inner { grid-template-columns: minmax(0, 1fr); }
+      .booking-form-content { padding: 0 4px 12px; }
+      .progress-steps { margin-inline: 0; padding-inline: 0; }
+      .step-label { font-size: 9px; overflow-wrap: anywhere; }
+      .gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding-inline: 0;
+      }
+      .gallery-item .cat-tag {
+        left: 10px;
+        bottom: 10px;
+        max-width: calc(100% - 20px);
+        padding-inline: 10px;
+        overflow-wrap: anywhere;
+      }
+      .reviews-list { overflow-x: auto; padding-bottom: 8px; }
+      .review-card { min-width: min(280px, calc(100vw - 48px)); }
+      .faq-floating {
+        right: 12px;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        width: calc(100% - 24px);
+        max-width: none;
+      }
+      .faq-panel { border-radius: 18px; }
+      .lightbox { padding: 12px; }
+      .lightbox img {
+        max-width: calc(100vw - 24px);
+        max-height: 78vh;
+        border-radius: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar { padding-inline: 12px; }
+      .logo { min-width: 0; font-size: 1.15rem; }
+      .nav-right { min-width: 0; gap: 8px; }
+      .nav-right .btn-primary { padding-inline: 11px; white-space: nowrap; }
+      section { padding-inline: 16px; }
+      .gallery-grid, .stats-grid { grid-template-columns: 1fr; }
+      .calendar-header h4 { font-size: 14px; }
+      .calendar-day { font-size: 11px; }
+      .day-indicator { display: none; }
+      .progress-steps { gap: 4px; }
+      .step-number { width: 28px; height: 28px; margin-bottom: 5px; }
+      .step-label { font-size: 8px; }
+      .action-row { flex-direction: column; align-items: stretch; }
+      .action-row button,
+      .hero-buttons .btn-primary,
+      .hero-buttons .btn-secondary,
+      .review-modal button { width: 100%; }
+      .modal-content, .review-modal {
+        width: 100%;
+        max-width: 100%;
+        padding-inline: 16px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .nav-right .btn-primary { font-size: 0; padding-inline: 10px; }
+      .nav-right .btn-primary i { font-size: 0.8rem; margin: 0; }
+      .booking-wrap,
+      .section-card,
+      .booking-form-container { padding: 16px; }
+    }
+
+    @media (max-width: 600px) {
+      .booking-form-container {
+        overflow: hidden;
+      }
+
+      .progress-steps {
+        width: 100%;
+        min-width: 0;
+        margin: 16px 0 22px;
+        padding: 0;
+        gap: 4px;
+      }
+
+      .progress-line {
+        top: 14px;
+        left: 14px;
+        right: 14px;
+      }
+
+      .progress-steps .step {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+
+      .progress-steps .step-number {
+        position: relative;
+        z-index: 1;
+        width: 28px;
+        height: 28px;
+        margin-bottom: 6px;
+        font-size: 11px;
+      }
+
+      .progress-steps .step-label {
+        display: block;
+        width: 100%;
+        min-height: 2.4em;
+        padding: 0 2px;
+        font-size: clamp(8px, 2.5vw, 10px);
+        line-height: 1.2;
+        letter-spacing: 0;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: normal;
+      }
+
+      .booking-form-content,
+      .booking-step,
+      .guest-section,
+      .rates-container,
+      .summary-container {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .booking-form-content {
+        padding-inline: 0;
+      }
+
+      .field-row input,
+      .field-row select,
+      .field-row textarea,
+      .guest-input,
+      .special-request-input,
+      .special-request-textarea {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 375px) {
+      .progress-steps {
+        gap: 1px;
+      }
+
+      .progress-steps .step-label {
+        font-size: 8px;
+        min-height: 2.5em;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .progress-steps .step-number {
+        background: #f7f7f7;
+        border: 1px solid #d7d7d7;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+      }
+
+      .progress-steps .step.active .step-number {
+        border: 2px solid rgba(197, 159, 145, 0.45);
+        box-shadow: 0 3px 8px rgba(197, 159, 145, 0.22);
+      }
+
+      .progress-steps .step-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 32px;
+        padding: 5px 4px;
+        border: 1px solid #e0e0e0;
+        border-radius: 7px;
+        background: #ffffff;
+        color: #6a6a6a;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+
+      .progress-steps .step.active .step-label {
+        border-color: rgba(197, 159, 145, 0.45);
+        background: #fffaf7;
+        color: #9b7b71;
+      }
+    }
+
+    @media (max-width: 375px) {
+      .progress-steps .step-label {
+        min-height: 30px;
+        padding-inline: 2px;
+        border-radius: 6px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .field-row {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        gap: 6px;
+        padding: 6px 0;
+      }
+
+      .field-row label {
+        max-width: 100%;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+      }
+
+      .field-row input,
+      .field-row select,
+      .field-row textarea,
+      .field-row .guest-select,
+      .field-row .special-request-input,
+      .field-row .special-request-textarea {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .field-row .guest-age-inputs {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .field-row small {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        line-height: 1.35;
+      }
+    }
+
+    @media (max-width: 600px) {
+      #booking {
+        padding: 32px 12px;
+      }
+
+      #booking .booking-form-header {
+        width: 100%;
+        min-width: 0;
+        padding: 0 0 10px;
+        border-bottom: 1px solid #ececec;
+      }
+
+      #booking .booking-form-title {
+        max-width: 100%;
+        color: #1a1a1a;
+        font-size: clamp(17px, 5vw, 20px);
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+      }
+
+      #booking .booking-section-header {
+        margin-bottom: 22px;
+      }
+
+      #booking .booking-container,
+      #booking .multi-step-booking-form,
+      #booking .booking-form-container {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+      }
+
+      #booking .booking-form-container {
+        padding: 14px;
+        border-radius: 16px;
+      }
+
+      #booking .booking-form-title {
+        font-size: 18px;
+        line-height: 1.25;
+      }
+
+      #booking .booking-form-content {
+        padding: 0;
+      }
+
+      #booking .two-col,
+      #booking .guest-info-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      #booking .guest-section,
+      #booking .rates-container,
+      #booking .summary-container {
+        width: 100%;
+        min-width: 0;
+        padding: 14px;
+        border-radius: 12px;
+      }
+
+      #booking .guest-info-column {
+        width: 100%;
+        gap: 4px;
+      }
+
+      #booking .guest-age-inputs {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      #booking .guest-age-group {
+        min-width: 0;
+      }
+
+      #booking .guest-age-group label {
+        min-height: 2.4em;
+        font-size: 0.62rem;
+        line-height: 1.2;
+        overflow-wrap: anywhere;
+      }
+
+      #booking .guest-input {
+        padding-inline: 8px;
+        text-align: center;
+      }
+
+      #booking .rate-item {
+        align-items: flex-start;
+        gap: 8px;
+        line-height: 1.3;
+      }
+
+      #booking .rate-item .rate-label {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      #booking .rate-item .rate-value {
+        flex: 0 0 auto;
+        white-space: nowrap;
+      }
+
+      #booking .summary-container {
+        gap: 4px;
+      }
+
+      #booking .summary-row,
+      #booking .payment-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 3px;
+        padding: 8px 0;
+      }
+
+      #booking .summary-row .label,
+      #booking .payment-row .label,
+      #booking .summary-row .value,
+      #booking .payment-row .value {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        text-align: left;
+      }
+
+      #booking .summary-row.check-in-out {
+        gap: 8px;
+      }
+
+      #booking .summary-row.check-in-out .line {
+        width: 100%;
+        gap: 3px;
+      }
+
+      #booking .summary-row.total {
+        margin-top: 4px;
+        padding-top: 10px;
+      }
+
+      #booking .payment-section {
+        padding: 10px;
+        border-radius: 10px;
+      }
+
+      #booking .security-deposit {
+        align-items: flex-start;
+        padding: 10px;
+        border-radius: 10px;
+        line-height: 1.35;
+      }
+
+      #booking .payment-method-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      #booking .payment-option {
+        min-height: 44px;
+        padding: 10px 12px;
+      }
+
+      #booking .qr-code-display {
+        padding: 14px;
+        border-radius: 12px;
+      }
+
+      #booking .qr-code-image {
+        width: min(100%, 220px);
+        height: auto;
+      }
+
+      #booking .terms-content {
+        max-width: 100%;
+        padding: 14px;
+        border-radius: 12px;
+      }
+
+      #booking .terms-text,
+      #booking .terms-content .faq-answer p {
+        font-size: 0.82rem;
+        line-height: 1.55;
+        overflow-wrap: anywhere;
+      }
+
+      #booking .terms-content .faq-question {
+        gap: 8px;
+        padding: 10px 0;
+      }
+
+      #booking .terms-content .faq-question-text {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      #booking .agreement-checkbox {
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      #booking .agreement-text {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        line-height: 1.35;
+      }
+
+      #booking .info-box {
+        padding: 12px;
+        margin-top: 14px;
+      }
+
+      #booking .info-box-content {
+        gap: 8px;
+      }
+
+      #booking .info-text {
+        overflow-wrap: anywhere;
+      }
+
+      #booking .action-row {
+        align-items: stretch;
+        gap: 8px;
+        margin-top: 16px;
+        padding-top: 12px;
+      }
+
+      #booking .action-row .btn-back,
+      #booking .action-row .btn-continue {
+        width: 100%;
+        min-height: 42px;
+        padding-inline: 14px;
+      }
+    }
+
+    @media (max-width: 375px) {
+      #booking {
+        padding-inline: 8px;
+      }
+
+      #booking .booking-form-container {
+        padding: 10px;
+        border-radius: 14px;
+      }
+
+      #booking .booking-form-title {
+        font-size: 17px;
+      }
+
+      #booking .progress-steps {
+        margin-block: 14px 18px;
+      }
+
+      #booking .progress-steps .step-label {
+        min-height: 28px;
+        font-size: 7.5px;
+      }
+
+      #booking .guest-section,
+      #booking .rates-container,
+      #booking .summary-container,
+      #booking .terms-content {
+        padding: 11px;
+        border-radius: 10px;
+      }
+
+      #booking .guest-age-inputs {
+        gap: 4px;
+      }
+
+      #booking .guest-age-group label {
+        font-size: 0.58rem;
+      }
+
+      #booking .field-row input,
+      #booking .field-row select,
+      #booking .field-row textarea,
+      #booking .guest-input {
+        min-height: 34px;
+        height: 34px;
+        font-size: 0.78rem;
+      }
+
+      #booking .field-row textarea,
+      #booking .field-row .special-request-textarea {
+        height: auto;
+        min-height: 70px;
+      }
+
+      #booking .summary-row,
+      #booking .payment-row {
+        font-size: 0.78rem;
+      }
+
+      #booking .btn-back,
+      #booking .btn-continue {
+        font-size: 0.78rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      #booking #step4 {
+        min-width: 0;
+      }
+
+      #booking #step4 .step-header {
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ececec;
+        font-size: 17px;
+        line-height: 1.3;
+      }
+
+      #booking #step4 .guest-section {
+        gap: 10px;
+        background: #fafafa;
+      }
+
+      #booking #step4 .guest-info-grid {
+        display: flex !important;
+        flex-direction: column;
+        gap: 8px;
+        margin: 0;
+      }
+
+      #booking #step4 .field-row {
+        gap: 5px;
+        padding: 5px 0;
+      }
+
+      #booking #step4 .field-row label {
+        color: #6a6a6a;
+        font-size: 0.63rem;
+        text-transform: uppercase;
+        letter-spacing: 0.35px;
+      }
+
+      #booking #step4 .detail-value {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        min-height: 34px;
+        padding: 8px 10px;
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 7px;
+        color: #1a1a1a;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+        box-sizing: border-box;
+      }
+
+      #booking #step4 .summary-container {
+        background: #f7f7f7;
+      }
+
+      #booking #step4 .info-box {
+        border-radius: 10px;
+      }
+
+      #booking #step4 .action-row {
+        margin-top: 14px;
       }
     }

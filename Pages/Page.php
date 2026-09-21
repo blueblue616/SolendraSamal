@@ -631,6 +631,97 @@ $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
       }
     }
 
+    /* iPhone SE specific */
+    @media (max-width: 375px) {
+      .faq-floating {
+        bottom: 0.8rem;
+        right: 0.8rem;
+        left: 0.8rem;
+      }
+
+      .faq-panel {
+        max-height: 480px;
+      }
+
+      .faq-floating.open .faq-panel {
+        max-height: 60vh;
+      }
+
+      .faq-header {
+        padding: 1rem 1.2rem 0.6rem;
+      }
+
+      .faq-header h3 {
+        font-size: 1rem;
+      }
+
+      .faq-close {
+        width: 28px;
+        height: 28px;
+        font-size: 1.1rem;
+      }
+
+      .faq-chat {
+        padding: 0.8rem 1rem 0.4rem;
+        max-height: 280px;
+      }
+
+      .faq-bubble {
+        max-width: 90%;
+        font-size: 0.85rem;
+        padding: 0.6rem 0.8rem;
+      }
+
+      .faq-avatar {
+        width: 26px;
+        height: 26px;
+        font-size: 0.7rem;
+      }
+
+      .faq-typing .faq-bubble {
+        padding: 0.7rem 0.9rem;
+      }
+
+      .faq-typing .dot {
+        width: 5px;
+        height: 5px;
+      }
+
+      .faq-suggestions {
+        padding: 0.4rem 1rem 0.6rem;
+        gap: 0.3rem;
+      }
+
+      .faq-chip {
+        padding: 0.3rem 0.7rem;
+        font-size: 0.7rem;
+      }
+
+      .faq-input-area {
+        padding: 0.7rem 1rem 0.9rem;
+      }
+
+      .faq-input {
+        padding: 0.6rem 0.9rem;
+        font-size: 0.85rem;
+      }
+
+      .faq-send {
+        width: 38px;
+        height: 38px;
+        font-size: 0.85rem;
+      }
+
+      .faq-trigger {
+        padding: 0.8rem 1.4rem;
+        font-size: 0.9rem;
+      }
+
+      .faq-trigger i {
+        font-size: 1rem;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .faq-panel,
       .faq-trigger,
@@ -676,6 +767,25 @@ $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
       outline: none;
       border-color: #c9a86c;
       background: #fff;
+    }
+
+    /* iPhone SE specific for guest inputs */
+    @media (max-width: 375px) {
+      .guest-age-inputs {
+        gap: 8px;
+      }
+      .guest-age-group {
+        flex: 1;
+      }
+      .guest-age-group label {
+        font-size: 0.65rem;
+        margin-bottom: 3px;
+      }
+      .guest-input {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+      }
     }
   </style>
 </head>

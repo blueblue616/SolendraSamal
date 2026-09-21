@@ -1432,7 +1432,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
   <!-- MAIN -->
   <div class="main">
     <header class="topnav">
-      <button class="toggle-sidebar" id="mobileSidebarToggle" style="background:transparent;border:none;font-size:22px;color:var(--text-secondary);"><i class="fas fa-bars"></i></button>
+      <button class="toggle-sidebar sidebar-toggle-button" id="mobileSidebarToggle" type="button" aria-label="Open navigation menu" title="Open navigation menu"><i class="fas fa-bars"></i></button>
       <div class="search"><i class="fas fa-search"></i><input placeholder="Search bookings, guests..."></div>
       <div class="actions">
         <div class="notification-bell" onclick="toggleAdminNotificationDropdown()">
@@ -1495,7 +1495,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
       <!-- BOOKINGS -->
       <div id="page-bookings" class="page hidden">
         <div class="bookings-header">
-          <h2>Bookings</h2>
+          <h2>Recent Bookings</h2>
           <div class="bookings-actions">
             <input type="text" id="searchBookings" placeholder="Search...">
             <select id="filterStatus">
@@ -1554,10 +1554,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
               <tr>
                 <th>ID</th>
                 <th>Guest</th>
-                <th>Email</th>
-                <th>Check-in</th>
-                <th>Check-out</th>
-                <th>Guests</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -1905,50 +1901,33 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
           updateMiniCalendar(bookings);
           
           if (bookings.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-secondary);padding:40px;">No bookings found</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-secondary);padding:40px;">No bookings found</td></tr>';
             return;
           }
 
           tbody.innerHTML = bookings.map(booking => {
-            const statusClass = booking.status === 'confirmed' ? 'confirmed' :
-                                booking.status === 'cancelled' ? 'cancelled' : 'pending';
-
-            // Validate and format check-in/check-out dates
-            const checkinDateObj = booking.checkin ? new Date(booking.checkin) : null;
-            const checkoutDateObj = booking.checkout ? new Date(booking.checkout) : null;
-
-            const checkinDate = checkinDateObj && !isNaN(checkinDateObj.getTime())
-              ? checkinDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-              : 'N/A';
-            const checkoutDate = checkoutDateObj && !isNaN(checkoutDateObj.getTime())
-              ? checkoutDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-              : 'N/A';
+            const statusClass = booking.status || 'pending_booking_confirmation';
 
             const guestName = booking.name || booking.user_name || 'N/A';
-            const guestEmail = booking.email || 'N/A';
             
             // Generate context-aware quick actions based on status
             let quickActions = '';
             quickActions = `
-              <button class="btn btn-sm btn-outline" onclick="viewBooking('${booking.booking_id}')" title="View Details">👁</button>
+              <button class="booking-action-button icon-btn" onclick="viewBooking('${booking.booking_id}')" title="View details" aria-label="View details"><i class="fas fa-eye"></i></button>
               <div class="dropdown" style="display:inline-block;position:relative;">
-                <button class="btn btn-sm btn-outline" onclick="toggleBookingMenu('${booking.booking_id}')" title="More Options">⋮</button>
+                <button class="booking-action-button icon-btn" onclick="toggleBookingMenu('${booking.booking_id}')" title="More options" aria-label="More options"><i class="fas fa-ellipsis-v"></i></button>
                 <div id="bookingMenu-${booking.booking_id}" class="dropdown-menu" style="display:none;position:absolute;right:0;top:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;min-width:150px;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.2);">
-                  <button class="dropdown-item" onclick="deleteBooking('${booking.booking_id}')" style="display:block;width:100%;padding:8px 12px;text-align:left;background:none;border:none;color:var(--text-primary);cursor:pointer;font-size:13px;">🗑 Delete Booking</button>
+                  <button class="dropdown-item" onclick="deleteBooking('${booking.booking_id}')" style="display:block;width:100%;padding:8px 12px;text-align:left;background:none;border:none;color:var(--text-primary);cursor:pointer;font-size:13px;"><i class="fas fa-trash-alt"></i> Delete booking</button>
                 </div>
               </div>
             `;
             
             return `
               <tr>
-                <td>${booking.booking_id}</td>
-                <td>${guestName}</td>
-                <td>${guestEmail}</td>
-                <td>${checkinDate}</td>
-                <td>${checkoutDate}</td>
-                <td>${booking.guests}</td>
-                <td><span class="badge ${statusClass}">${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}</span></td>
-                <td>
+                <td data-label="ID" class="booking-id"><span class="booking-value">${booking.booking_id}</span></td>
+                <td data-label="Guest" class="booking-guest"><span class="booking-value">${guestName}</span></td>
+                <td data-label="Status"><span class="status-badge status-${statusClass}"><span class="status-dot"></span>${booking.status.replace(/_/g, ' ').replace(/\b\w/g, character => character.toUpperCase())}</span></td>
+                <td data-label="Actions" class="booking-actions-cell">
                   ${quickActions}
                 </td>
               </tr>
@@ -5001,27 +4980,53 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
       const sidebar = document.getElementById('sidebar');
       const toggleBtn = document.getElementById('toggleSidebar');
       const mobileToggle = document.getElementById('mobileSidebarToggle');
-      function toggleSidebar() {
-        if (window.innerWidth <= 900) {
-          sidebar.classList.toggle('open');
+
+      function updateSidebarToggle() {
+        if (!sidebar || !mobileToggle) return;
+
+        const isMobile = window.innerWidth <= 900;
+
+        if (isMobile) {
+          sidebar.classList.remove('collapsed');
         } else {
-          sidebar.classList.toggle('collapsed');
+          sidebar.classList.remove('open');
+        }
+
+        const isOpen = isMobile
+          ? sidebar.classList.contains('open')
+          : !sidebar.classList.contains('collapsed');
+        const icon = mobileToggle.querySelector('i');
+
+        mobileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        mobileToggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+        mobileToggle.setAttribute('title', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+        if (icon) {
+          icon.className = isMobile && isOpen ? 'fas fa-times' : 'fas fa-bars';
         }
       }
-      if (toggleBtn) toggleBtn.addEventListener('click', toggleSidebar);
-      if (mobileToggle) mobileToggle.addEventListener('click', function(e) {
+
+      function toggleSidebar() {
+        if (!sidebar) return;
+
         if (window.innerWidth <= 900) {
           sidebar.classList.toggle('open');
         } else {
           sidebar.classList.toggle('collapsed');
         }
-      });
+
+        updateSidebarToggle();
+      }
+      if (toggleBtn) toggleBtn.addEventListener('click', toggleSidebar);
+      if (mobileToggle) mobileToggle.addEventListener('click', toggleSidebar);
+      window.addEventListener('resize', updateSidebarToggle);
+      updateSidebarToggle();
       // close sidebar on outside click (mobile)
       if (sidebar && mobileToggle) {
         document.addEventListener('click', function(e) {
           if (window.innerWidth <= 900 && sidebar.classList.contains('open')) {
             if (!sidebar.contains(e.target) && !mobileToggle.contains(e.target)) {
               sidebar.classList.remove('open');
+              updateSidebarToggle();
             }
           }
         });
