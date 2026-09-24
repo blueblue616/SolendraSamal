@@ -15,3 +15,5 @@ Picture/Video/**/*.mp4
 
 # Google Calendar credentials (use .example.json as template)
 credentials/google-calendar-credentials.json
+
+config.php
