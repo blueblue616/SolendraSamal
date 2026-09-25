@@ -115,8 +115,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
 
             // Send emails (now running in background)
-            if (file_exists(__DIR__ . '/../email_helper.php')) {
-                require_once __DIR__ . '/../email_helper.php';
+            try {
+                if (file_exists(__DIR__ . '/../email_helper.php')) {
+                    require_once __DIR__ . '/../email_helper.php';
 
                 // Generate email content
                 $checkinFormatted = date('F j, Y', strtotime($checkin));
@@ -190,11 +191,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 
                 // Send admin email directly with error logging
                 $adminEmailSent = sendBookingEmail($config['admin_email'], 'Admin', 'New Booking Request - ' . $booking_id, $adminHtmlBody, 'admin_notification', $booking_id);
-                if ($adminEmailSent) {
-                    error_log("Admin email sent successfully to {$config['admin_email']} for booking $booking_id");
-                } else {
-                    error_log("FAILED to send admin email to {$config['admin_email']} for booking $booking_id");
+                    if ($adminEmailSent) {
+                        error_log("Admin email sent successfully to {$config['admin_email']} for booking $booking_id");
+                    } else {
+                        error_log("FAILED to send admin email to {$config['admin_email']} for booking $booking_id");
+                    }
                 }
+            } catch (Throwable $emailError) {
+                error_log('Booking email processing failed: ' . $emailError->getMessage());
             }
         } else {
             error_log("Booking creation failed: " . $conn->error);

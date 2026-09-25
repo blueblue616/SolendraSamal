@@ -3497,11 +3497,18 @@ Reservations made through Airbnb, Booking.com, or other third-party platforms ar
           method: 'POST',
           body: formData
         })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok: ' + response.status);
+        .then(async response => {
+          const responseText = await response.text();
+          let data;
+          try {
+            data = JSON.parse(responseText);
+          } catch (parseError) {
+            data = { success: false, message: responseText || 'Empty server response' };
           }
-          return response.json();
+          if (!response.ok) {
+            throw new Error(data.message || 'Booking request failed with status ' + response.status);
+          }
+          return data;
         })
         .then(data => {
           console.log('Booking response:', data);
