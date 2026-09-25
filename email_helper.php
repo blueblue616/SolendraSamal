@@ -752,6 +752,14 @@ function ensureReviewEmailColumns($conn) {
         $check = $conn->query("SHOW COLUMNS FROM bookings LIKE '$column'");
         if ($check && $check->num_rows === 0) {
             $conn->query($alterSql);
+            continue;
+        }
+
+        if ($check && ($definition = $check->fetch_assoc())) {
+            if (in_array($column, ['review_email_scheduled_at', 'review_email_sent_at'], true)
+                && strtoupper((string)$definition['Null']) !== 'YES') {
+                $conn->query("ALTER TABLE bookings MODIFY COLUMN $column DATETIME NULL DEFAULT NULL");
+            }
         }
     }
 }

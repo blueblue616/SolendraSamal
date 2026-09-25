@@ -79,6 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $conn->query("ALTER TABLE bookings ADD COLUMN infants INT DEFAULT 0");
         }
 
+        // Keep older databases compatible with the review email columns.
+        require_once __DIR__ . '/../email_helper.php';
+        ensureReviewEmailColumns($conn);
+
         $sql = "INSERT INTO bookings (booking_id, user_id, name, email, phone, checkin, checkout, guests, adults, children, infants, requests, total_amount, payment_method, amount_sent, payment_notes, payment_proof, payment_status, status)
                 VALUES ('$booking_id', '$user_id', '$name', '$email', '$phone', '$checkin', '$checkout', $guests, $adults, $children, $infants, '$requests', $total_amount, '$payment_method', $amount_sent, '$payment_notes', '$payment_proof_db', '$payment_status', 'pending_booking_confirmation')";
 
