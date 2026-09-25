@@ -1939,6 +1939,13 @@ $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
       const heroNavLeft = document.querySelector('.hero-nav-left');
       const heroNavRight = document.querySelector('.hero-nav-right');
 
+      function playVideoSafely(video) {
+        const playRequest = video.play();
+        if (playRequest && typeof playRequest.catch === 'function') {
+          playRequest.catch(() => {});
+        }
+      }
+
       function goToSlide(index) {
         slides.forEach(s => {
           s.classList.remove('active');
@@ -1951,7 +1958,7 @@ $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
         slides[slideIndex].classList.add('active');
         indicators[slideIndex].classList.add('active');
         if (slides[slideIndex].tagName === 'VIDEO') {
-          slides[slideIndex].play();
+          playVideoSafely(slides[slideIndex]);
         }
       }
 
@@ -2086,7 +2093,7 @@ $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
         if (currentVideoIndex < 0) currentVideoIndex = videoSlides.length - 1;
 
         videoSlides[currentVideoIndex].classList.add('active');
-        videoSlides[currentVideoIndex].play();
+        playVideoSafely(videoSlides[currentVideoIndex]);
         videoIndicators[currentVideoIndex].classList.add('active');
       }
 
