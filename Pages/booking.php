@@ -79,8 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $conn->query("ALTER TABLE bookings ADD COLUMN infants INT DEFAULT 0");
         }
 
-        $sql = "INSERT INTO bookings (booking_id, user_id, name, email, phone, checkin, checkout, guests, adults, children, infants, requests, total_amount, payment_method, amount_sent, payment_notes, payment_proof, review_email_scheduled_at, review_email_sent_at, payment_status, status)
-            VALUES ('$booking_id', '$user_id', '$name', '$email', '$phone', '$checkin', '$checkout', $guests, $adults, $children, $infants, '$requests', $total_amount, '$payment_method', $amount_sent, '$payment_notes', '$payment_proof_db', NULL, NULL, '$payment_status', 'pending_booking_confirmation')";
+        $sql = "INSERT INTO bookings (booking_id, user_id, name, email, phone, checkin, checkout, guests, adults, children, infants, requests, total_amount, payment_method, amount_sent, payment_notes, payment_proof, review_email_scheduled_at, review_email_sent_at, review_email_status, payment_status, status)
+            VALUES ('$booking_id', '$user_id', '$name', '$email', '$phone', '$checkin', '$checkout', $guests, $adults, $children, $infants, '$requests', $total_amount, '$payment_method', $amount_sent, '$payment_notes', '$payment_proof_db', NULL, NULL, 'Not Scheduled', '$payment_status', 'pending_booking_confirmation')";
 
         if ($conn->query($sql)) {
             error_log("Booking created: $booking_id with status: pending_booking_confirmation");
