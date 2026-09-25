@@ -756,8 +756,10 @@ function ensureReviewEmailColumns($conn) {
         }
 
         if ($check && ($definition = $check->fetch_assoc())) {
+            $defaultValue = $definition['Default'] ?? null;
             if (in_array($column, ['review_email_scheduled_at', 'review_email_sent_at'], true)
-                && strtoupper((string)$definition['Null']) !== 'YES') {
+                && (strtoupper((string)$definition['Null']) !== 'YES'
+                    || ($defaultValue !== null && strtoupper((string)$defaultValue) !== 'NULL'))) {
                 $conn->query("ALTER TABLE bookings MODIFY COLUMN $column DATETIME NULL DEFAULT NULL");
             }
         }
