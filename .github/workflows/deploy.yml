@@ -26,9 +26,11 @@ jobs:
               exit 1
             fi
 
+            echo "Deployed commit: $(git rev-parse --short HEAD)"
+
             sudo cp /var/www/server-config/config.php /var/www/html/config.php
             sudo chown www-data:www-data /var/www/html/config.php
 
-            sudo systemctl restart apache2
+            sudo systemctl reload apache2
 
             echo "Deployment completed successfully!"
