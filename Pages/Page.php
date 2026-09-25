@@ -3435,7 +3435,7 @@ Reservations made through Airbnb, Booking.com, or other third-party platforms ar
 
       // Submit booking
       let isSubmitting = false;
-      window.submitBooking = function() {
+      window.submitBooking = function(event) {
         // Prevent multiple submissions
         if (isSubmitting) {
           console.log('Submission already in progress');
