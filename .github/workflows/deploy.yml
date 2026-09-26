@@ -21,8 +21,6 @@ jobs:
             git fetch origin
             git reset --hard origin/main
 
-            echo "Deployed commit: $(git rev-parse --short HEAD)"
-
             sudo cp /var/www/server-config/config.php /var/www/html/config.php
             sudo chown www-data:www-data /var/www/html/config.php
 
