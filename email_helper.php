@@ -16,7 +16,7 @@ $defaultCheckOutTime = '11:00'; // 11:00 AM
 $googleReviewUrl = 'https://www.google.com/maps/place/Solendra+Samal/@7.1183572,125.7270377,17z/data=!3m1!4b1!4m6!3m5!1s0x32f9696b5369f3ad:0xc9d062bc5b47040e!8m2!3d7.1183572!4d125.7270377!16s%2Fg%2F11zwzp4w9t!5m1!1e2!18m1!1e1?entry=ttu&g_ep=EgoyMDI2MDkwNi4wIKXMDSoASAFQAw%3D%3D';
 $reviewEmailDelayMinutes = 60; // Delay after checkout before sending review email (60 minutes = 1:00 PM if checkout is 12:00 PM)
 $propertyName = 'Solendra Samal'; // Property name for emails
-$logoUrl = ''; // Production: the logo is embedded from $logoPath when the file exists
+$logoUrl = 'http://localhost/Picture/LOGO/solendrasamal-removebg-preview.png'; // Replace with your actual domain URL for the logo
 $logoPath = __DIR__ . '/Picture/LOGO/solendrasamal-removebg-preview.png'; // Local path for embedded image
 
 /**
@@ -236,10 +236,6 @@ function sendBookingEmail($recipientEmail, $recipientName, $subject, $htmlBody, 
         $mail->SMTPSecure = $config['encryption'];
         $mail->Port = $config['port'];
 
-        // Prevent SMTP from hanging long enough to affect a web request.
-        $mail->Timeout = 15;
-        $mail->SMTPKeepAlive = false;
-
         // Set DKIM signing (if configured)
         if (isset($config['dkim_domain']) && isset($config['dkim_selector']) && isset($config['dkim_private_key'])) {
             $mail->DKIM_domain = $config['dkim_domain'];
@@ -296,11 +292,9 @@ function sendBookingEmail($recipientEmail, $recipientName, $subject, $htmlBody, 
         
         return true;
 
-    } catch (\Throwable $e) {
-        $mailError = isset($mail) ? $mail->ErrorInfo : '';
-        $error = "Email sending failed: " . ($mailError ?: $e->getMessage());
+    } catch (\PHPMailer\PHPMailer\Exception $e) {
+        $error = "Email sending failed: " . $mail->ErrorInfo;
         error_log($error);
-        error_log("Email exception class: " . get_class($e));
         if ($emailType && $bookingId) {
             logEmailAttempt($recipientEmail, $emailType, $bookingId, false, $error);
         }
