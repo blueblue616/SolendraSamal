@@ -71,6 +71,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         // Store relative path for database
         $payment_proof_db = $payment_proof_path ? str_replace(__DIR__ . '/../', '', $payment_proof_path) : null;
 
+        // Check if adults, children, infants columns exist
+        $check_columns = $conn->query("SHOW COLUMNS FROM bookings LIKE 'adults'");
+        if ($check_columns && $check_columns->num_rows === 0) {
+            $conn->query("ALTER TABLE bookings ADD COLUMN adults INT DEFAULT 0");
+            $conn->query("ALTER TABLE bookings ADD COLUMN children INT DEFAULT 0");
+            $conn->query("ALTER TABLE bookings ADD COLUMN infants INT DEFAULT 0");
+        }
+
         $sql = "INSERT INTO bookings (booking_id, user_id, name, email, phone, checkin, checkout, guests, adults, children, infants, requests, total_amount, payment_method, amount_sent, payment_notes, payment_proof, review_email_scheduled_at, review_email_sent_at, review_email_status, payment_status, status)
             VALUES ('$booking_id', '$user_id', '$name', '$email', '$phone', '$checkin', '$checkout', $guests, $adults, $children, $infants, '$requests', $total_amount, '$payment_method', $amount_sent, '$payment_notes', '$payment_proof_db', NULL, NULL, 'Not Scheduled', '$payment_status', 'pending_booking_confirmation')";
 
@@ -98,161 +106,99 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 error_log("Notification creation result: " . ($notif_result ? 'success' : 'failed: ' . $conn->error));
             }
 
-            /*
-             * IMPORTANT:
-             * The database booking is already successful at this point.
-             * Send the HTTP response before attempting SMTP so an email
-             * problem cannot turn a successful booking into a 500 response.
-             */
-            http_response_code(200);
-            $response = json_encode([
-                'success' => true,
-                'message' => 'Booking submitted successfully',
-                'booking_id' => $booking_id
-            ]);
-
-            echo $response;
-
-            // On PHP-FPM/FastCGI, finish the HTTP request now.
-            // SMTP processing below will no longer affect the customer's response.
+            // Send response immediately (before emails for faster booking)
+            echo json_encode(['success' => true, 'message' => 'Booking submitted successfully', 'booking_id' => $booking_id]);
+            
+            // Send emails in background after response
             if (function_exists('fastcgi_finish_request')) {
                 fastcgi_finish_request();
-            } else {
-                // Try to flush the response when FastCGI is unavailable.
-                if (function_exists('ob_get_level')) {
-                    while (ob_get_level() > 0) {
-                        @ob_end_flush();
-                    }
-                }
-                @flush();
             }
 
-            /* Email processing is deliberately isolated from booking creation. */
+            // Send emails (now running in background)
             try {
-                $emailHelper = __DIR__ . '/../email_helper.php';
+                if (file_exists(__DIR__ . '/../email_helper.php')) {
+                    require_once __DIR__ . '/../email_helper.php';
 
-                if (!file_exists($emailHelper)) {
-                    error_log("BOOKING EMAIL ERROR [$booking_id]: email_helper.php not found at $emailHelper");
+                // Generate email content
+                $checkinFormatted = date('F j, Y', strtotime($checkin));
+                $checkoutFormatted = date('F j, Y', strtotime($checkout));
+                $suggestedCheckInTime = getSuggestedCheckInTime();
+                $checkOutTime = getCheckOutTime();
+
+                // Queue customer confirmation email
+                $customerContent = '
+                    <p>Dear ' . htmlspecialchars($name) . ',</p>
+                    <p>We have received your booking request.</p>
+                    <div style="background-color: #f9f9f9; padding: 20px; border-left: 4px solid #c9a86c; margin: 20px 0;">
+                        <h3 style="margin-top: 0; color: #333;">Booking ID: ' . htmlspecialchars($booking_id) . '</h3>
+                        <p><strong>Check-in:</strong><br>
+                        ' . $checkinFormatted . ' at ' . $suggestedCheckInTime . '</p>
+                        <p><strong>Check-out:</strong><br>
+                        ' . $checkoutFormatted . ' at ' . $checkOutTime . '</p>
+                        <p><strong>Guests:</strong> ' . $guests . ' (' . $adults . ' adults, ' . $children . ' children, ' . $infants . ' infants)</p>';
+                
+                if (!empty($requests)) {
+                    $customerContent .= '<p><strong>Special Requests:</strong><br>' . htmlspecialchars($requests) . '</p>';
+                }
+                
+                $customerContent .= '<p><strong>Payment Status:</strong> ' . htmlspecialchars($payment_status) . '</p>
+                        <p><strong>Booking Status:</strong> <span style="color: #ff9800;">Pending</span></p>
+                    </div>
+                    <p>Your booking is currently waiting for administrator approval.</p>
+                    <p>If you have any questions, please contact us:
+                    <br>Gmail: solendrasamal@gmail.com
+                    <br>Contact#: 0945 588 7095
+                    <br>Facebook: Solendra Samal</p>
+                ';
+                
+                $customerHtmlBody = generateEmailTemplate('Booking Request Received - ' . $booking_id, $customerContent);
+                
+                // Send email directly with error logging
+                $customerEmailSent = sendBookingEmail($email, $name, 'Booking Request Received - ' . $booking_id, $customerHtmlBody, 'booking_received', $booking_id);
+                if ($customerEmailSent) {
+                    error_log("Customer email sent successfully to $email for booking $booking_id");
                 } else {
-                    require_once $emailHelper;
+                    error_log("FAILED to send customer email to $email for booking $booking_id");
+                }
 
-                    if (!function_exists('sendBookingEmail') || !function_exists('generateEmailTemplate')) {
-                        error_log("BOOKING EMAIL ERROR [$booking_id]: required email helper functions are unavailable");
+                // Queue admin notification email
+                $config = require __DIR__ . '/../email_config.php';
+                $adminContent = '
+                    <h2 style="color: #c9a86c; margin-top: 0;">NEW BOOKING REQUEST</h2>
+                    <hr style="border: none; border-top: 2px solid #c9a86c; margin: 20px 0;">
+                    
+                    <h3 style="color: #333; margin-top: 0;">BOOKING INFORMATION</h3>
+                    <div style="background-color: #f9f9f9; padding: 20px; border-left: 4px solid #c9a86c; margin: 20px 0;">
+                        <p><strong>Booking ID:</strong> ' . htmlspecialchars($booking_id) . '</p>
+                        <p><strong>Customer Name:</strong> ' . htmlspecialchars($name) . '</p>
+                        <p><strong>Email:</strong> ' . htmlspecialchars($email) . '</p>
+                        <p><strong>Phone:</strong> ' . htmlspecialchars($phone) . '</p>
+                        <p><strong>Check-in:</strong> ' . $checkinFormatted . ' at ' . $suggestedCheckInTime . '</p>
+                        <p><strong>Check-out:</strong> ' . $checkoutFormatted . ' at ' . $checkOutTime . '</p>
+                        <p><strong>Guests:</strong> ' . $guests . ' (' . $adults . ' adults, ' . $children . ' children, ' . $infants . ' infants)</p>
+                        <p><strong>Payment Method:</strong> ' . htmlspecialchars($payment_method) . '</p>
+                        <p><strong>Amount Sent:</strong> ₱' . number_format($amount_sent, 2) . '</p>
+                        <p><strong>Payment Notes:</strong> ' . htmlspecialchars($payment_notes) . '</p>
+                        <p><strong>Payment Status:</strong> ' . htmlspecialchars($payment_status) . '</p>
+                    </div>
+                ';
+                
+                if (!empty($requests)) {
+                    $adminContent .= '<p><strong>Special Requests:</strong> ' . htmlspecialchars($requests) . '</p>';
+                }
+                
+                $adminHtmlBody = generateEmailTemplate('New Booking Request - ' . $booking_id, $adminContent);
+                
+                // Send admin email directly with error logging
+                $adminEmailSent = sendBookingEmail($config['admin_email'], 'Admin', 'New Booking Request - ' . $booking_id, $adminHtmlBody, 'admin_notification', $booking_id);
+                    if ($adminEmailSent) {
+                        error_log("Admin email sent successfully to {$config['admin_email']} for booking $booking_id");
                     } else {
-                        $checkinFormatted = date('F j, Y', strtotime($checkin));
-                        $checkoutFormatted = date('F j, Y', strtotime($checkout));
-                        $suggestedCheckInTime = getSuggestedCheckInTime();
-                        $checkOutTime = getCheckOutTime();
-
-                        // -----------------------------
-                        // CUSTOMER EMAIL
-                        // -----------------------------
-                        $customerContent = '
-                            <p>Dear ' . htmlspecialchars($name) . ',</p>
-                            <p>We have received your booking request.</p>
-                            <div style="background-color: #f9f9f9; padding: 20px; border-left: 4px solid #c9a86c; margin: 20px 0;">
-                                <h3 style="margin-top: 0; color: #333;">Booking ID: ' . htmlspecialchars($booking_id) . '</h3>
-                                <p><strong>Check-in:</strong><br>
-                                ' . $checkinFormatted . ' at ' . $suggestedCheckInTime . '</p>
-                                <p><strong>Check-out:</strong><br>
-                                ' . $checkoutFormatted . ' at ' . $checkOutTime . '</p>
-                                <p><strong>Guests:</strong> ' . $guests . ' (' . $adults . ' adults, ' . $children . ' children, ' . $infants . ' infants)</p>';
-
-                        if (!empty($requests)) {
-                            $customerContent .= '<p><strong>Special Requests:</strong><br>' . htmlspecialchars($requests) . '</p>';
-                        }
-
-                        $customerContent .= '<p><strong>Payment Status:</strong> ' . htmlspecialchars($payment_status) . '</p>
-                                <p><strong>Booking Status:</strong> <span style="color: #ff9800;">Pending</span></p>
-                            </div>
-                            <p>Your booking is currently waiting for administrator approval.</p>
-                            <p>If you have any questions, please contact us:
-                            <br>Gmail: solendrasamal@gmail.com
-                            <br>Contact#: 0945 588 7095
-                            <br>Facebook: Solendra Samal</p>
-                        ';
-
-                        $customerHtmlBody = generateEmailTemplate(
-                            'Booking Request Received - ' . $booking_id,
-                            $customerContent
-                        );
-
-                        error_log("EMAIL DEBUG [$booking_id]: BEFORE customer SMTP");
-                        $customerEmailSent = sendBookingEmail(
-                            $email,
-                            $name,
-                            'Booking Request Received - ' . $booking_id,
-                            $customerHtmlBody,
-                            'booking_received',
-                            $booking_id
-                        );
-                        error_log("EMAIL DEBUG [$booking_id]: AFTER customer SMTP = " . ($customerEmailSent ? 'SUCCESS' : 'FAILED'));
-
-                        // -----------------------------
-                        // ADMIN EMAIL
-                        // -----------------------------
-                        $configFile = __DIR__ . '/../email_config.php';
-                        if (!file_exists($configFile)) {
-                            error_log("EMAIL DEBUG [$booking_id]: email_config.php not found at $configFile");
-                        } else {
-                            $config = require $configFile;
-                            $adminEmail = $config['admin_email'] ?? '';
-
-                            if (!filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
-                                error_log("EMAIL DEBUG [$booking_id]: invalid admin_email in email_config.php");
-                            } else {
-                                $adminContent = '
-                                    <h2 style="color: #c9a86c; margin-top: 0;">NEW BOOKING REQUEST</h2>
-                                    <hr style="border: none; border-top: 2px solid #c9a86c; margin: 20px 0;">
-                                    <h3 style="color: #333; margin-top: 0;">BOOKING INFORMATION</h3>
-                                    <div style="background-color: #f9f9f9; padding: 20px; border-left: 4px solid #c9a86c; margin: 20px 0;">
-                                        <p><strong>Booking ID:</strong> ' . htmlspecialchars($booking_id) . '</p>
-                                        <p><strong>Customer Name:</strong> ' . htmlspecialchars($name) . '</p>
-                                        <p><strong>Email:</strong> ' . htmlspecialchars($email) . '</p>
-                                        <p><strong>Phone:</strong> ' . htmlspecialchars($phone) . '</p>
-                                        <p><strong>Check-in:</strong> ' . $checkinFormatted . ' at ' . $suggestedCheckInTime . '</p>
-                                        <p><strong>Check-out:</strong> ' . $checkoutFormatted . ' at ' . $checkOutTime . '</p>
-                                        <p><strong>Guests:</strong> ' . $guests . ' (' . $adults . ' adults, ' . $children . ' children, ' . $infants . ' infants)</p>
-                                        <p><strong>Payment Method:</strong> ' . htmlspecialchars($payment_method) . '</p>
-                                        <p><strong>Amount Sent:</strong> ₱' . number_format($amount_sent, 2) . '</p>
-                                        <p><strong>Payment Notes:</strong> ' . htmlspecialchars($payment_notes) . '</p>
-                                        <p><strong>Payment Status:</strong> ' . htmlspecialchars($payment_status) . '</p>
-                                    </div>
-                                ';
-
-                                if (!empty($requests)) {
-                                    $adminContent .= '<p><strong>Special Requests:</strong> ' . htmlspecialchars($requests) . '</p>';
-                                }
-
-                                if (!empty($payment_proof_path) && file_exists($payment_proof_path)) {
-                                    $adminContent .= '<p><strong>Payment Proof:</strong> The payment proof is attached to this email.</p>';
-                                } else {
-                                    $adminContent .= '<p><strong>Payment Proof:</strong> No payment proof uploaded.</p>';
-                                }
-
-                                $adminHtmlBody = generateEmailTemplate(
-                                    'New Booking Request - ' . $booking_id,
-                                    $adminContent
-                                );
-
-                                error_log("EMAIL DEBUG [$booking_id]: BEFORE admin SMTP");
-                                $adminEmailSent = sendBookingEmail(
-                                    $adminEmail,
-                                    'Admin',
-                                    'New Booking Request - ' . $booking_id,
-                                    $adminHtmlBody,
-                                    'admin_notification',
-                                    $booking_id,
-                                    $payment_proof_path
-                                );
-                                error_log("EMAIL DEBUG [$booking_id]: AFTER admin SMTP = " . ($adminEmailSent ? 'SUCCESS' : 'FAILED'));
-                            }
-                        }
+                        error_log("FAILED to send admin email to {$config['admin_email']} for booking $booking_id");
                     }
                 }
             } catch (Throwable $emailError) {
-                // Never change the successful booking response because of email failure.
-                error_log('Booking email processing failed for ' . $booking_id . ': ' . $emailError->getMessage());
+                error_log('Booking email processing failed: ' . $emailError->getMessage());
             }
         } else {
             error_log("Booking creation failed: " . $conn->error);
