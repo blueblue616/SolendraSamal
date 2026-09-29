@@ -3493,7 +3493,7 @@ Reservations made through Airbnb, Booking.com, or other third-party platforms ar
           formData.append('payment_proof', paymentProof.files[0]);
         }
 
-        fetch('booking.php', {
+        fetch('/Pages/booking.php', {
           method: 'POST',
           body: formData
         })
