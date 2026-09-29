@@ -1,14 +1,14 @@
 <?php
 
 return [
-   'host'       => 'smtp.gmail.com',
-    'username'   => 'emirencegumban@gmail.com',
-    'password'   => 'racw mwnd znwo wcmx',
+    'host'       => 'smtp.gmail.com',
+    'username'   => 'your-email@gmail.com',
+    'password'   => 'your-app-password',
     'port'       => 587,
     'encryption' => 'tls',
 
-    'from_email' => 'emirencegumban@gmail.com',
+    'from_email' => 'your-email@gmail.com',
     'from_name'  => 'Solendra Samal',
 
-    'admin_email' => 'emirencegumban@gmail.com',
+    'admin_email' => 'your-email@gmail.com',
 ];
